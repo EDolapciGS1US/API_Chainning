@@ -1,0 +1,133 @@
+{
+	"info": {
+		"_postman_id": "92f901ad-148f-4ffd-a745-d080377ad7e5",
+		"name": "APIChainining",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POST",
+			"item": [
+				{
+					"name": "RegisterUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "762e8154-1a55-4ed3-aa82-d454e3ff2a77",
+								"exec": [
+									"Payload = JSON.parse(responseBody)\r",
+									"value = Payload.id\r",
+									"console.log(value);\r",
+									"pm.environment.set(\"id\", value);\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"var emails = pm.environment.get(\"emails\");\r",
+									"if(emails & emails.length > 0){\r",
+									"    postman.setNextRequest(\"https://reqres.in/api/register/preprod\");\r",
+									"}else{\r",
+									"    postman.setNextRequest(null);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "54faeaa0-769a-48d6-a4c4-a9dce97e80a1",
+								"exec": [
+									"var emails = pm.environment.get(\"emails\");\r",
+									"if(!emails){\r",
+									"    var emails = [\"eve.holt@reqres.in\", \"erhan1@gmail.com\",\"erhan2@gmail.com\"];\r",
+									"}\r",
+									"\r",
+									"var currentEmail = emails.shift();\r",
+									"pm.environment.set(\"email\", currentEmail);\r",
+									"pm.environment.set(\"emails\", emails);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"{{email}}\",\r\n    \"password\": \"{{password}}\"\r\n}"
+						},
+						"url": {
+							"raw": "https://reqres.in/{{endpoint}}",
+							"protocol": "https",
+							"host": [
+								"reqres",
+								"in"
+							],
+							"path": [
+								"{{endpoint}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "GET",
+			"item": [
+				{
+					"name": "GetSingleUser",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "PUT",
+			"item": [
+				{
+					"name": "UpdateUser",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{firstname}}\",\r\n    \"job\": \"zion resident\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://reqres.in/api/users/2",
+							"protocol": "https",
+							"host": [
+								"reqres",
+								"in"
+							],
+							"path": [
+								"api",
+								"users",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
